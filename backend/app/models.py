@@ -1,6 +1,13 @@
 from datetime import datetime
 
-from sqlalchemy import Boolean, CheckConstraint, DateTime, Integer, String, func
+from sqlalchemy import (
+    Boolean,
+    CheckConstraint,
+    DateTime,
+    Integer,
+    String,
+    func,
+)
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import Base
@@ -8,10 +15,15 @@ from app.database import Base
 
 class Task(Base):
     __tablename__ = "tasks"
+
     __table_args__ = (
         CheckConstraint(
             "priority >= 1 AND priority <= 10",
             name="check_task_priority_range",
+        ),
+        CheckConstraint(
+            "completed_at IS NULL OR is_done = true",
+            name="check_completed_task_is_done",
         ),
     )
 
@@ -37,6 +49,7 @@ class Task(Base):
         nullable=False,
         default=False,
         server_default="false",
+        index=True,
     )
 
     priority: Mapped[int] = mapped_column(
@@ -44,6 +57,27 @@ class Task(Base):
         nullable=False,
         default=5,
         server_default="5",
+        index=True,
+    )
+
+    is_urgent: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default="false",
+        index=True,
+    )
+
+    completed_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+        index=True,
+    )
+
+    deadline: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+        index=True,
     )
 
     created_at: Mapped[datetime] = mapped_column(

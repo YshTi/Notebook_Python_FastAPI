@@ -1,0 +1,205 @@
+.taskItem {
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgb(15 23 42 / 0.06);
+    transition:
+        border-color 150ms ease,
+        box-shadow 150ms ease,
+        transform 150ms ease;
+}
+
+.taskItem:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 8px 24px rgb(15 23 42 / 0.08);
+    transform: translateY(-1px);
+}
+
+.completed {
+    background: #f8fafc;
+}
+
+.urgentBadge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+    background: #fee2e2;
+    color: #b91c1c;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.statusButton {
+    display: flex;
+    width: 1.6rem;
+    height: 1.6rem;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.1rem;
+    border: 2px solid #cbd5e1;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        border-color 150ms ease,
+        background-color 150ms ease;
+}
+
+.statusButton:hover:not(:disabled) {
+    border-color: #2563eb;
+}
+
+.statusButton[aria-pressed="true"] {
+    border-color: #16a34a;
+    background: #16a34a;
+}
+
+.statusButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.content {
+    min-width: 0;
+    flex: 1;
+}
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.titleGroup {
+    display: flex;
+    min-width: 0;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.title {
+    margin: 0;
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.completed .title,
+.completed .description {
+    color: #94a3b8;
+    text-decoration: line-through;
+}
+
+.description {
+    margin: 0.75rem 0 0;
+    color: #475569;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+}
+
+.statusBadge,
+.priorityBadge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.doneBadge {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.undoneBadge {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+.lowPriority {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.mediumPriority {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.highPriority {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+    margin-top: 1rem;
+    color: #94a3b8;
+    font-size: 0.75rem;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.editButton,
+.deleteButton {
+    padding: 0.45rem 0.8rem;
+    border: 0;
+    border-radius: 0.65rem;
+    background: transparent;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.editButton {
+    color: #2563eb;
+}
+
+.editButton:hover:not(:disabled) {
+    background: #eff6ff;
+}
+
+.deleteButton {
+    color: #dc2626;
+}
+
+.deleteButton:hover:not(:disabled) {
+    background: #fef2f2;
+}
+
+.editButton:disabled,
+.deleteButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+@media (max-width: 640px) {
+    .header {
+        flex-direction: column;
+    }
+
+    .priorityBadge {
+        align-self: flex-start;
+    }
+}
