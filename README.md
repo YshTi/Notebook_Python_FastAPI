@@ -6,6 +6,7 @@ A modern, production-grade full-stack task management application designed for b
 
 - **Frontend (Vercel):** [App Link](https://notebook-python-fast-api.vercel.app)
 - **Backend (Render):** [API Link](https://notebook-python-fastapi.onrender.com)
+- **Backend Docs:** [Documentation](https://notebook-python-fastapi.onrender.com/docs)
 
 ---
 
