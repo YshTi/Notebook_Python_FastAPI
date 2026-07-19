@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 import type { Task, TaskCreate, TaskUpdate } from "@/lib/types";
@@ -55,6 +55,27 @@ export function TaskItem({
   const [isEditing, setIsEditing] = useState(false);
   const [editPriority, setEditPriority] = useState(task.priority);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isZoomed, setIsZoomed] = useState(false);
+
+  useEffect(() => {
+    if (!isZoomed) return;
+
+    // Prevent background scrolling
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setIsZoomed(false);
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isZoomed]);
 
   async function handleDeleteConfirm() {
     setShowDeleteConfirm(false);
@@ -72,24 +93,19 @@ export function TaskItem({
 
   // isEditing does not return early anymore, we will just conditionally render the Modal at the end of the return statement
 
-
-  return (
-    <motion.article
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      className={`${styles.taskItem} ${
-        task.is_done
-          ? styles.completed
-          : ""
-      }`}
+  const cardInner = (
+    <div 
+      className={styles.clickableCardArea}
+      onClick={() => setIsZoomed(true)}
     >
       <div className={styles.topBar}>
         <div className={styles.topBarLeft}>
           <button
             type="button"
-            onClick={() => void onToggle(task)}
+            onClick={(e) => {
+              e.stopPropagation();
+              void onToggle(task);
+            }}
             disabled={isUpdating}
             className={styles.statusButton}
             aria-pressed={task.is_done}
@@ -140,9 +156,10 @@ export function TaskItem({
         </h3>
 
         {task.description && (
-          <p className={styles.description}>
-            {task.description}
-          </p>
+          <div 
+            className={styles.description}
+            dangerouslySetInnerHTML={{ __html: task.description }}
+          />
         )}
 
         <div className={styles.meta}>
@@ -169,9 +186,11 @@ export function TaskItem({
         <div className={styles.actions}>
           <button
             type="button"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               setEditPriority(task.priority);
               setIsEditing(true);
+              setIsZoomed(false);
             }}
             disabled={isUpdating}
             className={styles.editButton}
@@ -180,7 +199,11 @@ export function TaskItem({
           </button>
           <button
             type="button"
-            onClick={handleDeleteClick}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDeleteClick();
+              setIsZoomed(false);
+            }}
             disabled={isUpdating}
             className={styles.deleteButton}
           >
@@ -188,7 +211,21 @@ export function TaskItem({
           </button>
         </div>
       </div>
+    </div>
+  );
 
+  return (
+    <motion.article
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      className={`${styles.taskItem} ${
+        task.is_done ? styles.completed : ""
+      }`}
+    >
+      {cardInner}
+      
       {isEditing && (
         <Modal 
           title="Edit Task" 
@@ -203,6 +240,20 @@ export function TaskItem({
             onPriorityChange={setEditPriority}
           />
         </Modal>
+      )}
+
+      {isZoomed && (
+        <div className={styles.zoomedOverlay} onClick={(e) => { e.stopPropagation(); setIsZoomed(false); }}>
+          <div className={styles.zoomedHint}>
+            Tap anywhere or press Esc to close
+          </div>
+          <article 
+            className={`${styles.taskItem} ${styles.zoomedTaskItem} ${task.is_done ? styles.completed : ""}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {cardInner}
+          </article>
+        </div>
       )}
 
       <ConfirmModal

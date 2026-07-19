@@ -2,7 +2,7 @@
 
 import type { TaskStats } from "@/lib/types";
 import { motion } from "framer-motion";
-import { IconNotesBlank } from "@/components/icons/icons";
+import { Icon } from "@/components/icons/icons";
 import styles from "./summary.module.css";
 
 type SummaryProps = {
@@ -18,7 +18,7 @@ export function Summary({ stats }: SummaryProps) {
   return (
     <div className={styles.summary}>
       <motion.div className={styles.summaryCard} {...hoverProps}>
-        <IconNotesBlank className={styles.summaryCardBg} />
+        <Icon name="icon-notes-blank" className={styles.summaryCardBg} />
         <div className={styles.summaryCardText}>
           <span className={styles.summaryValue}>{stats?.total ?? 0}</span>
           <span className={styles.summaryLabel}>Total</span>
@@ -26,7 +26,7 @@ export function Summary({ stats }: SummaryProps) {
       </motion.div>
 
       <motion.div className={styles.summaryCard} {...hoverProps}>
-        <IconNotesBlank className={styles.summaryCardBg} />
+        <Icon name="icon-notes-blank" className={styles.summaryCardBg} />
         <div className={styles.summaryCardText}>
           <span className={styles.summaryValue}>{stats?.undone ?? 0}</span>
           <span className={styles.summaryLabel}>Undone</span>
@@ -34,7 +34,7 @@ export function Summary({ stats }: SummaryProps) {
       </motion.div>
 
       <motion.div className={styles.summaryCard} {...hoverProps}>
-        <IconNotesBlank className={styles.summaryCardBg} />
+        <Icon name="icon-notes-blank" className={styles.summaryCardBg} />
         <div className={styles.summaryCardText}>
           <span className={styles.summaryValue}>{stats?.urgent ?? 0}</span>
           <span className={styles.summaryLabel}>Urgent</span>
@@ -42,7 +42,7 @@ export function Summary({ stats }: SummaryProps) {
       </motion.div>
 
       <motion.div className={styles.summaryCard} {...hoverProps}>
-        <IconNotesBlank className={styles.summaryCardBg} />
+        <Icon name="icon-notes-blank" className={styles.summaryCardBg} />
         <div className={styles.summaryCardText}>
           <span className={styles.summaryValue}>{stats?.done ?? 0}</span>
           <span className={styles.summaryLabel}>Done</span>

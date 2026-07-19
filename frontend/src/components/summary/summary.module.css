@@ -90,4 +90,9 @@
         height: 104px;
         padding: 0;
     }
+
+    .summaryCardText {
+        padding-left: 20px;
+        padding-top: 20px;
+    }
 }

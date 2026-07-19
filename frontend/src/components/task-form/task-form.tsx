@@ -7,6 +7,14 @@ import {
 
 import type { Task, TaskCreate } from "@/lib/types";
 
+import { Icon } from "@/components/icons/icons";
+import dynamic from "next/dynamic";
+import "react-quill-new/dist/quill.snow.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
+
 import styles from "./task-form.module.css";
 
 type TaskFormProps = {
@@ -18,21 +26,7 @@ type TaskFormProps = {
   onPriorityChange?: (priority: number) => void;
 };
 
-function convertLocalDateToIso(
-  value: string,
-): string | null {
-  if (!value) {
-    return null;
-  }
-
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return null;
-  }
-
-  return date.toISOString();
-}
+// Not needed anymore since we deal with Date objects directly
 
 export function TaskForm({
   initialData,
@@ -48,16 +42,27 @@ export function TaskForm({
   const [isUrgent, setIsUrgent] =
     useState(initialData?.is_urgent ?? false);
   
-  // Format the deadline to yyyy-MM-ddThh:mm if it exists
-  const initialDeadline = initialData?.deadline
-    ? new Date(initialData.deadline).toISOString().slice(0, 16)
-    : "";
-  const [deadline, setDeadline] =
-    useState(initialDeadline);
+  // Use a Date object for the DatePicker
+  const [deadline, setDeadline] = useState<Date | null>(
+    initialData?.deadline ? new Date(initialData.deadline) : null
+  );
 
   const [isSubmitting, setIsSubmitting] =
     useState(false);
   const [error, setError] = useState("");
+
+  let rawTextLength = 0;
+  if (description && description !== '<p><br></p>' && description !== '<p></p>') {
+    const stripped = description.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ');
+    rawTextLength = stripped.length;
+  }
+  
+  // Enforce 1000 *visible* characters on frontend.
+  // Backend allows 5000 total HTML characters, preventing DB crashes while giving plenty of room for markup.
+  const isDescriptionTooLong = rawTextLength > 1000;
+  
+  const [now] = useState(() => Date.now());
+  const isDeadlineInvalid = deadline ? deadline.getTime() <= now : false;
 
   async function handleSubmit(
     event: FormEvent<HTMLFormElement>,
@@ -73,12 +78,11 @@ export function TaskForm({
       return;
     }
 
-    const deadlineIso =
-      convertLocalDateToIso(deadline);
+    const deadlineIso = deadline ? deadline.toISOString() : null;
 
     if (
-      deadlineIso &&
-      new Date(deadlineIso).getTime() <= Date.now()
+      deadline &&
+      deadline.getTime() <= Date.now()
     ) {
       setError(
         "Deadline must be in the future.",
@@ -104,7 +108,7 @@ export function TaskForm({
         setDescription("");
         setPriority(5);
         setIsUrgent(false);
-        setDeadline("");
+        setDeadline(null);
       }
     } catch (caughtError) {
       setError(
@@ -165,29 +169,25 @@ export function TaskForm({
           <div className={styles.labelRow}>
             <label
               className={styles.label}
-              htmlFor="task-description"
             >
               Description
             </label>
 
             <span
-              className={styles.characterCount}
+              className={`${styles.characterCount} ${isDescriptionTooLong ? styles.characterCountError : ""}`}
             >
-              {description.length}/1000
+              {rawTextLength}/1000
             </span>
           </div>
 
-          <textarea
+          <ReactQuill
             id="task-description"
+            theme="snow"
             value={description}
-            onChange={(event) =>
-              setDescription(event.target.value)
-            }
-            maxLength={1000}
-            rows={2}
-            disabled={isSubmitting}
+            onChange={setDescription}
+            readOnly={isSubmitting}
             placeholder="Optional details"
-            className={styles.textarea}
+            className={`${styles.quillEditor} ${isDescriptionTooLong ? styles.quillError : ""}`}
           />
         </div>
 
@@ -238,16 +238,25 @@ export function TaskForm({
             Deadline
           </label>
 
-          <input
-            id="task-deadline"
-            type="datetime-local"
-            value={deadline}
-            onChange={(event) =>
-              setDeadline(event.target.value)
-            }
-            disabled={isSubmitting}
-            className={styles.input}
-          />
+          <div className={styles.datePickerWrapper}>
+            <DatePicker
+              id="task-deadline"
+              selected={deadline}
+              onChange={(date: Date | null) => setDeadline(date)}
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              timeCaption="time"
+              dateFormat="MMMM d, yyyy h:mm aa"
+              placeholderText="Select a deadline"
+              disabled={isSubmitting}
+              className={`${styles.input} ${isDeadlineInvalid ? styles.inputError : ""}`}
+              popperPlacement="top-end"
+              minDate={new Date()}
+              showPopperArrow={false}
+            />
+            <Icon name="icon-calendar" className={styles.calendarIcon} aria-hidden="true" />
+          </div>
         </div>
 
         <label className={styles.checkboxField}>
@@ -266,12 +275,12 @@ export function TaskForm({
         </label>
       </div>
 
-      {error && (
+      {(error || isDeadlineInvalid) && (
         <p
           className={styles.error}
           role="alert"
         >
-          {error}
+          {error || (isDeadlineInvalid ? "Deadline must be in the future." : "")}
         </p>
       )}
 
@@ -289,7 +298,7 @@ export function TaskForm({
         <button
           type="submit"
           disabled={
-            isSubmitting || !title.trim()
+            isSubmitting || !title.trim() || isDescriptionTooLong || isDeadlineInvalid
           }
           className={styles.submitButton}
         >

@@ -47,8 +47,6 @@
     line-height: 1.6;
 }
 
-/* Summary CSS moved to components/summary */
-
 .layout {
     display: block;
 }
@@ -104,8 +102,6 @@
     min-width: 0;
 }
 
-/* Filters CSS moved to components */
-
 .taskList {
     display: grid;
     gap: 14px;
@@ -142,6 +138,10 @@
 }
 
 @media (min-width: 768px) {
+    .page {
+        padding: 32px 40px;
+    }
+    
     .controlsHeader {
         flex-direction: row;
         align-items: center;
@@ -163,6 +163,10 @@
 }
 
 @media (min-width: 1024px) {
+    .page {
+        padding: 48px 64px;
+    }
+    
     .header {
         flex-direction: row;
         align-items: flex-end;

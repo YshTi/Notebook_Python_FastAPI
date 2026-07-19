@@ -1,5 +1,17 @@
 import React from 'react';
 
+export interface IconProps extends React.SVGProps<SVGSVGElement> {
+  name: string;
+}
+
+export function Icon({ name, ...props }: IconProps) {
+  return (
+    <svg {...props}>
+      <use href={`/sprite.svg#${name}`} />
+    </svg>
+  );
+}
+
 export function IconArrowDown(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 32 32" fill="currentColor" {...props}>
@@ -16,13 +28,7 @@ export function IconArrowUp(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-export function IconNotesBlank(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg {...props}>
-      <use href="/sprite.svg#icon-notes-blank" />
-    </svg>
-  );
-}
+
 
 export function IconWarning(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -33,3 +39,5 @@ export function IconWarning(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+

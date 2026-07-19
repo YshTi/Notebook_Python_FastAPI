@@ -73,7 +73,7 @@ export function TaskSelects({
         onChange={(val) => onSortChange(val as TaskSort)}
         options={sortOptions}
         ariaLabel="Sort tasks"
-        className={styles.dropdownWrapper}
+        className={`${styles.dropdownWrapper} ${styles.sortDropdown}`}
       />
     </>
   );

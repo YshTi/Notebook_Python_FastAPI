@@ -6,7 +6,7 @@
     border-radius: 2px;
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
     position: relative;
-    min-height: 220px;
+    aspect-ratio: 1 / 1;
     transition:
         transform 200ms ease,
         box-shadow 200ms ease;
@@ -140,6 +140,7 @@
     display: flex;
     flex-direction: column;
     flex: 1;
+    overflow: hidden;
 }
 
 .title {
@@ -157,12 +158,149 @@
 }
 
 .description {
-    margin: 0 0 16px 0;
+    position: relative;
     color: var(--color-gray-600);
     font-size: 14px;
     line-height: 1.5;
     overflow-wrap: anywhere;
     flex-grow: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.description::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 36px;
+    background: linear-gradient(to bottom, transparent, var(--color-white));
+    pointer-events: none;
+}
+
+.completed .description::after {
+    background: linear-gradient(to bottom, transparent, var(--color-gray-50));
+}
+
+.description p {
+    margin: 0 0 8px 0;
+}
+
+.description p:last-child {
+    margin-bottom: 0;
+}
+
+.description ul, 
+.description ol {
+    margin: 0 0 8px 0;
+    padding-left: 20px;
+}
+
+.zoomedContent .description {
+    font-size: 16px;
+}
+
+.clickableCardArea {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.zoomedOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.zoomedTaskItem {
+    width: 90vw;
+    max-width: 600px;
+    /* Since we set aspect-ratio: 1/1 on .taskItem, this will automatically be square! */
+    cursor: default;
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    z-index: 101;
+    overflow: visible !important;
+}
+
+.zoomedHint {
+    position: absolute;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    color: var(--color-white);
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+    opacity: 0.8;
+    pointer-events: none;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.2);
+    padding: 8px 16px;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+    z-index: 102;
+}
+
+/* Scaling text up for the zoomed view */
+.zoomedTaskItem .title {
+    font-size: 24px;
+    margin-bottom: 24px;
+}
+
+.zoomedTaskItem .content {
+    overflow-y: auto;
+}
+
+.zoomedTaskItem .description {
+    font-size: 18px;
+    line-height: 1.6;
+    max-height: none;
+    overflow: visible;
+    display: block;
+    flex-shrink: 0;
+}
+
+.zoomedTaskItem .description::after {
+    display: none;
+}
+
+.zoomedTaskItem .meta {
+    font-size: 14px;
+    margin-top: 32px;
+}
+
+.zoomedTaskItem .statusButton {
+    width: 28px;
+    height: 28px;
+}
+
+.zoomedTaskItem .statusBadge,
+.zoomedTaskItem .priorityBadge,
+.zoomedTaskItem .urgentBadge {
+    font-size: 14px;
+    padding: 6px 10px;
+}
+
+.zoomedTaskItem .editButton,
+.zoomedTaskItem .deleteButton {
+    font-size: 16px;
+    padding: 8px 16px;
 }
 
 .completed .description {
@@ -172,6 +310,7 @@
 
 .meta {
     margin-top: auto;
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     gap: 6px;

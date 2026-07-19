@@ -16,7 +16,7 @@ class TaskCreate(BaseModel):
     )
     description: str | None = Field(
         default=None,
-        max_length=1000,
+        max_length=5000,
     )
     priority: int = Field(
         default=5,
@@ -79,7 +79,7 @@ class TaskUpdate(BaseModel):
     )
     description: str | None = Field(
         default=None,
-        max_length=1000,
+        max_length=5000,
     )
     is_done: bool | None = None
     priority: int | None = Field(

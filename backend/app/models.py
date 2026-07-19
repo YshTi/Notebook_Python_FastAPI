@@ -40,7 +40,7 @@ class Task(Base):
     )
 
     description: Mapped[str | None] = mapped_column(
-        String(1000),
+        String(5000),
         nullable=True,
     )
 

@@ -18,3 +18,9 @@
 .dropdownWrapper {
     min-width: 96px;
 }
+
+@media (min-width: 768px) {
+    .sortDropdown {
+        min-width: 196px;
+    }
+}
