@@ -157,3 +157,56 @@ class TaskStatsResponse(BaseModel):
     done: int
     undone: int
     urgent: int
+
+
+class UserRegister(BaseModel):
+    email: str = Field(min_length=3, max_length=255)
+    password: str = Field(min_length=6, max_length=100)
+    name: str | None = Field(default=None, max_length=100)
+
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, value: str) -> str:
+        normalized = value.strip().lower()
+        if "@" not in normalized:
+            raise ValueError("Invalid email format")
+        return normalized
+
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
+
+class UserResponse(BaseModel):
+    id: int
+    email: str
+    name: str | None
+    is_verified: bool
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class UserUpdate(BaseModel):
+    email: str | None = Field(default=None, max_length=255)
+    name: str | None = Field(default=None, max_length=100)
+    password: str | None = Field(default=None, min_length=6, max_length=100)
+
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        normalized = value.strip().lower()
+        if not normalized:
+            return None
+        if "@" not in normalized:
+            raise ValueError("Invalid email format")
+        return normalized
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: UserResponse

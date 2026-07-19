@@ -34,6 +34,15 @@ export function ConfirmModal({ isOpen, title, message, onConfirm, onCancel }: Co
     };
   }, [isOpen, onCancel]);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
   if (!mounted) return null;
 
   return createPortal(

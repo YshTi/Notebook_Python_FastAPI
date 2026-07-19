@@ -8,7 +8,7 @@
     padding: 48px 24px;
     border: 1px dashed var(--color-gray-300);
     border-radius: 16px;
-    background: rgb(255 255 255 / 0.8);
+    background: var(--color-white);
     color: var(--color-gray-500);
     text-align: center;
 }

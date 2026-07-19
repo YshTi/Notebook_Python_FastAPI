@@ -9,7 +9,17 @@ import type {
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ??
-  "http://127.0.0.1:8000";
+  "http://localhost:8000";
+
+function getHeaders(headers: Record<string, string> = {}): Record<string, string> {
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+  }
+  return headers;
+}
 
 type GetTasksOptions = {
   search?: string;
@@ -70,6 +80,8 @@ export async function getTasks(
       : `${API_URL}/tasks`,
     {
       cache: "no-store",
+      credentials: "include",
+      headers: getHeaders(),
     },
   );
 
@@ -85,9 +97,10 @@ export async function createTask(
 ): Promise<Task> {
   const response = await fetch(`${API_URL}/tasks`, {
     method: "POST",
-    headers: {
+    headers: getHeaders({
       "Content-Type": "application/json",
-    },
+    }),
+    credentials: "include",
     body: JSON.stringify(taskData),
   });
 
@@ -106,9 +119,10 @@ export async function updateTask(
     `${API_URL}/tasks/${taskId}`,
     {
       method: "PATCH",
-      headers: {
+      headers: getHeaders({
         "Content-Type": "application/json",
-      },
+      }),
+      credentials: "include",
       body: JSON.stringify(updates),
     },
   );
@@ -127,6 +141,8 @@ export async function deleteTask(
     `${API_URL}/tasks/${taskId}`,
     {
       method: "DELETE",
+      credentials: "include",
+      headers: getHeaders(),
     },
   );
 
@@ -138,6 +154,8 @@ export async function deleteTask(
 export async function getTasksStats(): Promise<TaskStats> {
   const response = await fetch(`${API_URL}/tasks/stats`, {
     cache: "no-store",
+    credentials: "include",
+    headers: getHeaders(),
   });
 
   if (!response.ok) {

@@ -12,6 +12,8 @@ import { TaskForm } from "@/components/task-form/task-form";
 import { TaskList } from "@/components/task-list/task-list";
 import { Modal } from "@/components/modal/modal";
 import { ThemeToggle } from "@/components/theme-toggle/theme-toggle";
+import { useAuth } from "@/components/auth-provider/auth-provider";
+import Link from "next/link";
 import toast from "react-hot-toast";
 import {
   createTask,
@@ -32,6 +34,8 @@ import type {
 import styles from "./page.module.css";
 
 export default function HomePage() {
+  const { user, logout } = useAuth();
+
   const [tasks, setTasks] =
     useState<Task[]>([]);
   const [search, setSearch] =
@@ -91,7 +95,7 @@ export default function HomePage() {
     return () => {
       window.clearTimeout(timeoutId);
     };
-  }, [loadTasks]);
+  }, [loadTasks, user]);
 
   async function handleCreate(
     taskData: TaskCreate,
@@ -192,12 +196,52 @@ export default function HomePage() {
 
   return (
     <main className={styles.page}>
+      {/* Warning Banners based on authentication status */}
+      {!user ? (
+        <div className={styles.demoBanner}>
+          <span>🔒 You are viewing the public demo task list. Anyone can view/edit these tasks. </span>
+          <Link href="/login" className={styles.bannerLink}>Log in</Link>
+          <span> or </span>
+          <Link href="/register" className={styles.bannerLink}>Register</Link>
+          <span> to manage your private lists.</span>
+        </div>
+      ) : (
+        !user.is_verified && (
+          <div className={styles.verifyBanner}>
+            <span>⚠️ Your email is not verified. Please check your inbox for the confirmation link from Brevo. </span>
+            <Link href="/profile" className={styles.bannerLink}>Profile settings</Link>
+          </div>
+        )
+      )}
+
       <div className={styles.container}>
         <header className={styles.header}>
           <div>
-            <p className={styles.eyebrow}>
-              Junior Full-Stack Assignment
-            </p>
+            <div className={styles.topHeader}>
+              <p className={styles.eyebrow}>
+                Junior Full-Stack Assignment
+              </p>
+              
+              {/* Auth navigation controls */}
+              <div className={styles.authSection}>
+                {user ? (
+                  <div className={styles.userInfo}>
+                    <span className={styles.userGreet}>
+                      Hello, <Link href="/profile" className={styles.profileLink}>{user.name || user.email}</Link>
+                    </span>
+                    <button onClick={logout} className={styles.logoutBtn}>
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <div className={styles.authLinks}>
+                    <Link href="/login" className={styles.authLink}>Login</Link>
+                    <span className={styles.separator}>|</span>
+                    <Link href="/register" className={styles.authLink}>Register</Link>
+                  </div>
+                )}
+              </div>
+            </div>
 
             <div className={styles.titleWrapper}>
               <h1 className={styles.title}>
@@ -216,7 +260,6 @@ export default function HomePage() {
         </header>
 
         <div className={styles.layout}>
-
           <section className={styles.content}>
             <div className={styles.controlsHeader}>
               <div className={styles.searchPart}>

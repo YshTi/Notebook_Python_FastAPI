@@ -19,7 +19,7 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 32px;
-    margin-bottom: 32px;
+    margin: 32px 0;
 }
 
 .eyebrow {
@@ -178,4 +178,114 @@
         flex-direction: row;
         align-items: flex-end;
     }
+}
+
+.demoBanner {
+    width: 100%;
+    background-color: rgba(245, 158, 11, 0.12);
+    border-bottom: 1px solid rgba(245, 158, 11, 0.25);
+    color: #b45309;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.verifyBanner {
+    width: 100%;
+    background-color: rgba(239, 68, 68, 0.1);
+    border-bottom: 1px solid rgba(239, 68, 68, 0.2);
+    color: #b91c1c;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.bannerLink {
+    color: inherit;
+    text-decoration: underline;
+    font-weight: 700;
+}
+
+.bannerLink:hover {
+    color: var(--color-gray-900);
+}
+
+.topHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.authSection {
+    display: flex;
+    align-items: center;
+}
+
+.userInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+}
+
+.userGreet {
+    font-weight: 600;
+    color: var(--color-gray-600);
+}
+
+.profileLink {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.profileLink:hover {
+    text-decoration: underline;
+}
+
+.logoutBtn {
+    background: none;
+    border: 1px solid var(--color-gray-300);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-gray-600);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.logoutBtn:hover {
+    background-color: var(--color-gray-100);
+    color: var(--color-error);
+    border-color: var(--color-error-200);
+}
+
+.authLinks {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.authLink {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.authLink:hover {
+    text-decoration: underline;
+}
+
+.separator {
+    color: var(--color-gray-300);
+    user-select: none;
 }

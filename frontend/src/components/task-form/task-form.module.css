@@ -308,6 +308,11 @@
     height: 20px;
     fill: var(--color-primary-light);
     pointer-events: none;
+    transition: fill 150ms ease;
+}
+
+:global([data-theme="dark"]) .calendarIcon {
+    fill: #ffffff;
 }
 
 /* Custom Calendar Styling */

@@ -6,9 +6,9 @@ from sqlalchemy import asc, desc, or_, select, func
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models import Task
+from app.models import Task, User
 from app.schemas import TaskCreate, TaskResponse, TaskUpdate, TaskStatsResponse
-
+from app.auth_utils import get_optional_current_user
 
 router = APIRouter(
     prefix="/tasks",
@@ -37,8 +37,15 @@ def list_tasks(
         "deadline_desc",
     ] = Query(default="created_desc"),
     db: Session = Depends(get_db),
+    current_user: User | None = Depends(get_optional_current_user),
 ) -> list[Task]:
     statement = select(Task)
+
+    # Scoping tasks based on auth status (private vs public demo)
+    if current_user:
+        statement = statement.where(Task.user_id == current_user.id)
+    else:
+        statement = statement.where(Task.user_id.is_(None))
 
     if search and search.strip():
         pattern = f"%{search.strip()}%"
@@ -112,9 +119,12 @@ def list_tasks(
 def create_task(
     task_data: TaskCreate,
     db: Session = Depends(get_db),
+    current_user: User | None = Depends(get_optional_current_user),
 ) -> Task:
+    user_id = current_user.id if current_user else None
     task = Task(
-        **task_data.model_dump()
+        **task_data.model_dump(),
+        user_id=user_id
     )
 
     db.add(task)
@@ -125,11 +135,17 @@ def create_task(
 
 
 @router.get("/stats", response_model=TaskStatsResponse)
-def get_task_stats(db: Session = Depends(get_db)) -> TaskStatsResponse:
-    total = db.scalar(select(func.count(Task.id)))
-    done = db.scalar(select(func.count(Task.id)).where(Task.is_done.is_(True)))
-    undone = db.scalar(select(func.count(Task.id)).where(Task.is_done.is_(False)))
-    urgent = db.scalar(select(func.count(Task.id)).where(Task.is_urgent.is_(True), Task.is_done.is_(False)))
+def get_task_stats(
+    db: Session = Depends(get_db),
+    current_user: User | None = Depends(get_optional_current_user),
+) -> TaskStatsResponse:
+    # Filter stats by the current context (private list vs public demo list)
+    user_filter = Task.user_id == current_user.id if current_user else Task.user_id.is_(None)
+
+    total = db.scalar(select(func.count(Task.id)).where(user_filter))
+    done = db.scalar(select(func.count(Task.id)).where(user_filter, Task.is_done.is_(True)))
+    undone = db.scalar(select(func.count(Task.id)).where(user_filter, Task.is_done.is_(False)))
+    urgent = db.scalar(select(func.count(Task.id)).where(user_filter, Task.is_urgent.is_(True), Task.is_done.is_(False)))
 
     return TaskStatsResponse(
         total=total or 0,
@@ -146,6 +162,7 @@ def get_task_stats(db: Session = Depends(get_db)) -> TaskStatsResponse:
 def get_task(
     task_id: int,
     db: Session = Depends(get_db),
+    current_user: User | None = Depends(get_optional_current_user),
 ) -> Task:
     task = db.get(Task, task_id)
 
@@ -153,6 +170,14 @@ def get_task(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Task not found",
+        )
+
+    # Authorization Check
+    expected_user_id = current_user.id if current_user else None
+    if task.user_id != expected_user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to access this task",
         )
 
     return task
@@ -166,6 +191,7 @@ def update_task(
     task_id: int,
     task_data: TaskUpdate,
     db: Session = Depends(get_db),
+    current_user: User | None = Depends(get_optional_current_user),
 ) -> Task:
     task = db.get(Task, task_id)
 
@@ -173,6 +199,14 @@ def update_task(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Task not found",
+        )
+
+    # Authorization Check
+    expected_user_id = current_user.id if current_user else None
+    if task.user_id != expected_user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to access this task",
         )
 
     update_data = task_data.model_dump(
@@ -209,6 +243,7 @@ def update_task(
 def delete_task(
     task_id: int,
     db: Session = Depends(get_db),
+    current_user: User | None = Depends(get_optional_current_user),
 ) -> Response:
     task = db.get(Task, task_id)
 
@@ -216,6 +251,14 @@ def delete_task(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Task not found",
+        )
+
+    # Authorization Check
+    expected_user_id = current_user.id if current_user else None
+    if task.user_id != expected_user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to access this task",
         )
 
     db.delete(task)

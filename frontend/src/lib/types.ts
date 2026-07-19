@@ -48,3 +48,20 @@ export type TaskStats = {
   undone: number;
   urgent: number;
 };
+
+export type UserRegister = {
+  email: string;
+  password?: string;
+  name?: string;
+};
+
+export type UserLogin = {
+  email: string;
+  password?: string;
+};
+
+export type UserUpdate = {
+  email?: string;
+  name?: string;
+  password?: string;
+};

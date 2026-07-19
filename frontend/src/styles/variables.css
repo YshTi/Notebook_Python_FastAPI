@@ -49,7 +49,6 @@
   --color-summary-done-2: #2cb32c;
   --color-summary-done-background: #a9d6a4;
   --color-summary-text: #0f172a;
-  --color-text: var(--color-gray-900);
 
   /* Specifics for Task priority tags */
   --color-priority-low: #59b764;

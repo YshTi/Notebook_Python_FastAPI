@@ -92,3 +92,9 @@ body {
 :root[data-theme="dark"] .ql-snow .ql-picker {
   color: var(--color-text-secondary);
 }
+
+:root[data-theme="dark"] .ql-editor.ql-blank::before {
+  color: var(--color-gray-400) !important;
+}
+
+
