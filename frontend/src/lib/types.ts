@@ -41,3 +41,10 @@ export type TaskSort =
   | "priority_desc"
   | "deadline_asc"
   | "deadline_desc";
+
+export type TaskStats = {
+  total: number;
+  done: number;
+  undone: number;
+  urgent: number;
+};

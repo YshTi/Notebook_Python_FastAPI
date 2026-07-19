@@ -2,6 +2,7 @@ import type {
   Task,
   TaskCreate,
   TaskSort,
+  TaskStats,
   TaskStatus,
   TaskUpdate,
 } from "@/lib/types";
@@ -132,4 +133,16 @@ export async function deleteTask(
   if (!response.ok) {
     throw new Error(await parseError(response));
   }
+}
+
+export async function getTasksStats(): Promise<TaskStats> {
+  const response = await fetch(`${API_URL}/tasks/stats`, {
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw new Error(await parseError(response));
+  }
+
+  return response.json();
 }

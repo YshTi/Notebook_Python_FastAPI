@@ -1,0 +1,121 @@
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.taskItem {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.35rem; 
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    position: relative;
+    width: 100%;
+    max-width: 375px;
+    max-height: 90vh;
+    animation: slideUp 200ms ease-out;
+}
+
+@media (min-width: 768px) {
+    .taskItem {
+        max-width: 600px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .taskItem {
+        max-width: 740px;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.topBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1.2rem;
+    background: linear-gradient(135deg, #89bbf2 0%, #5d9cee 100%);
+    color: #ffffff;
+    border-bottom: 1px solid rgb(0 0 0 / 0.05);
+}
+
+.topBarLeft,
+.topBarRight {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.titleText {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.priorityBadge {
+    color: #ffffff;
+    padding: 0.25rem 0.6rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.lowPriority {
+    background: rgb(255 255 255 / 0.15);
+}
+
+.mediumPriority {
+    background: #f59e0b;
+}
+
+.highPriority {
+    background: #ef4444;
+}
+
+.closeButton {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    transition: background-color 150ms ease;
+}
+
+.closeButton:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: auto;
+}

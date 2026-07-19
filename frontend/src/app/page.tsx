@@ -9,17 +9,21 @@ import {
 import { TaskFilter } from "@/components/task-filters/task-filters";
 import { TaskForm } from "@/components/task-form/task-form";
 import { TaskList } from "@/components/task-list/task-list";
+import { Modal } from "@/components/modal/modal";
 import {
   createTask,
   deleteTask,
   getTasks,
+  getTasksStats,
   updateTask,
 } from "@/lib/api";
 import type {
   Task,
   TaskCreate,
   TaskSort,
+  TaskStats,
   TaskStatus,
+  TaskUpdate,
 } from "@/lib/types";
 
 import styles from "./page.module.css";
@@ -33,6 +37,8 @@ export default function HomePage() {
     useState<TaskStatus>("all");
   const [sort, setSort] =
     useState<TaskSort>("created_desc");
+  const [stats, setStats] = useState<TaskStats | null>(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const [isLoading, setIsLoading] =
     useState(true);
@@ -49,14 +55,17 @@ export default function HomePage() {
       setError("");
 
       try {
-        const loadedTasks =
-          await getTasks({
+        const [loadedTasks, loadedStats] = await Promise.all([
+          getTasks({
             search,
             status,
             sort,
-          });
+          }),
+          getTasksStats(),
+        ]);
 
         setTasks(loadedTasks);
+        setStats(loadedStats);
       } catch (caughtError) {
         setError(
           caughtError instanceof Error
@@ -85,6 +94,7 @@ export default function HomePage() {
     taskData: TaskCreate,
   ) {
     await createTask(taskData);
+    setIsCreateModalOpen(false);
     await loadTasks();
   }
 
@@ -141,18 +151,37 @@ export default function HomePage() {
     }
   }
 
-  const doneCount = tasks.filter(
-    (task) => task.is_done,
-  ).length;
+  async function handleUpdate(
+    taskId: number,
+    updates: TaskUpdate,
+  ) {
+    setUpdatingTaskId(taskId);
+    setError("");
 
-  const urgentCount = tasks.filter(
-    (task) =>
-      task.is_urgent && !task.is_done,
-  ).length;
+    try {
+      const updatedTask =
+        await updateTask(taskId, updates);
 
-  const undoneCount = tasks.filter(
-    (task) => !task.is_done,
-  ).length;
+      setTasks((currentTasks) =>
+        currentTasks.map(
+          (currentTask) =>
+            currentTask.id === taskId
+              ? updatedTask
+              : currentTask,
+        ),
+      );
+
+      await loadTasks();
+    } catch (caughtError) {
+      setError(
+        caughtError instanceof Error
+          ? caughtError.message
+          : "Could not update the task.",
+      );
+    } finally {
+      setUpdatingTaskId(null);
+    }
+  }
 
   return (
     <main className={styles.page}>
@@ -177,85 +206,92 @@ export default function HomePage() {
             <div
               className={styles.summaryCard}
             >
-              <span
-                className={styles.summaryValue}
-              >
-                {tasks.length}
-              </span>
+              <svg className={styles.summaryCardBg}><use href="/sprite.svg#icon-notes-blank"></use></svg>
+              <div className={styles.summaryCardText}>
+                <span
+                  className={styles.summaryValue}
+                >
+                  {stats?.total ?? 0}
+                </span>
 
-              <span
-                className={styles.summaryLabel}
-              >
-                Total
-              </span>
+                <span className={styles.summaryLabel} >
+                  Total
+                </span>
+              </div>
             </div>
 
             <div
               className={styles.summaryCard}
             >
-              <span
-                className={styles.summaryValue}
-              >
-                {undoneCount}
-              </span>
+              <svg className={styles.summaryCardBg}><use href="/sprite.svg#icon-notes-blank"></use></svg>
+              <div className={styles.summaryCardText}>
+                <span
+                  className={styles.summaryValue}
+                >
+                  {stats?.undone ?? 0}
+                </span>
 
-              <span
-                className={styles.summaryLabel}
-              >
-                Undone
-              </span>
+                <span className={styles.summaryLabel} >
+                  Undone
+                </span>
+              </div>
+            </div>
+
+            <div className={styles.summaryCard} >
+              <svg className={styles.summaryCardBg}><use href="/sprite.svg#icon-notes-blank"></use></svg>
+              <div className={styles.summaryCardText}>
+                <span
+                  className={styles.summaryValue}
+                >
+                  {stats?.urgent ?? 0}
+                </span>
+
+                <span className={styles.summaryLabel} >
+                  Urgent
+                </span>
+              </div>
             </div>
 
             <div
               className={styles.summaryCard}
             >
-              <span
-                className={styles.summaryValue}
-              >
-                {urgentCount}
-              </span>
+              <svg className={styles.summaryCardBg}><use href="/sprite.svg#icon-notes-blank"></use></svg>
+              <div className={styles.summaryCardText}>
+                <span
+                  className={styles.summaryValue}
+                >
+                  {stats?.done ?? 0}
+                </span>
 
-              <span
-                className={styles.summaryLabel}
-              >
-                Urgent
-              </span>
-            </div>
-
-            <div
-              className={styles.summaryCard}
-            >
-              <span
-                className={styles.summaryValue}
-              >
-                {doneCount}
-              </span>
-
-              <span
-                className={styles.summaryLabel}
-              >
-                Done
-              </span>
+                <span className={styles.summaryLabel} >
+                  Done
+                </span>
+              </div>
             </div>
           </div>
         </header>
 
         <div className={styles.layout}>
-          <aside className={styles.sidebar}>
-            <TaskForm
-              onCreate={handleCreate}
-            />
-          </aside>
 
           <section className={styles.content}>
-            <TaskFilter
-              search={search}
-              status={status}
-              sort={sort}
-              onSearchChange={setSearch}
-              onStatusChange={setStatus}
-              onSortChange={setSort}
-            />
+            <div className={styles.controlsHeader}>
+              <TaskFilter
+                search={search}
+                status={status}
+                sort={sort}
+                onSearchChange={setSearch}
+                onStatusChange={setStatus}
+                onSortChange={setSort}
+              />
+              <button
+                className={styles.addTaskButton}
+                onClick={() => setIsCreateModalOpen(true)}
+                aria-label="Add Task"
+                title="Add Task"
+              >
+                +
+              </button>
+            </div>
 
             {error && (
               <div
@@ -274,10 +310,23 @@ export default function HomePage() {
               }
               onToggle={handleToggle}
               onDelete={handleDelete}
+              onUpdate={handleUpdate}
             />
           </section>
         </div>
       </div>
+
+      {isCreateModalOpen && (
+        <Modal
+          title="Create New Task"
+          onClose={() => setIsCreateModalOpen(false)}
+        >
+          <TaskForm
+            onSubmit={handleCreate}
+            onCancel={() => setIsCreateModalOpen(false)}
+          />
+        </Modal>
+      )}
     </main>
   );
 }

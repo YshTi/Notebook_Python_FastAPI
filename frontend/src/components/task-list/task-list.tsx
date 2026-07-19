@@ -1,7 +1,7 @@
 "use client";
 
 import { TaskItem } from "@/components/task-item/task-item";
-import type { Task } from "@/lib/types";
+import type { Task, TaskUpdate } from "@/lib/types";
 
 import styles from "./task-list.module.css";
 
@@ -15,6 +15,10 @@ type TaskListProps = {
   onDelete: (
     taskId: number,
   ) => Promise<void>;
+  onUpdate: (
+    taskId: number,
+    updates: TaskUpdate,
+  ) => Promise<void>;
 };
 
 export function TaskList({
@@ -23,6 +27,7 @@ export function TaskList({
   updatingTaskId,
   onToggle,
   onDelete,
+  onUpdate,
 }: TaskListProps) {
   if (isLoading) {
     return (
@@ -57,6 +62,7 @@ export function TaskList({
           }
           onToggle={onToggle}
           onDelete={onDelete}
+          onUpdate={onUpdate}
         />
       ))}
     </div>

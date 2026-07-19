@@ -2,12 +2,12 @@ from datetime import datetime, timezone
 from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
-from sqlalchemy import asc, desc, or_, select
+from sqlalchemy import asc, desc, or_, select, func
 from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import Task
-from app.schemas import TaskCreate, TaskResponse, TaskUpdate
+from app.schemas import TaskCreate, TaskResponse, TaskUpdate, TaskStatsResponse
 
 
 router = APIRouter(
@@ -116,6 +116,21 @@ def create_task(
     db.refresh(task)
 
     return task
+
+
+@router.get("/stats", response_model=TaskStatsResponse)
+def get_task_stats(db: Session = Depends(get_db)) -> TaskStatsResponse:
+    total = db.scalar(select(func.count(Task.id)))
+    done = db.scalar(select(func.count(Task.id)).where(Task.is_done.is_(True)))
+    undone = db.scalar(select(func.count(Task.id)).where(Task.is_done.is_(False)))
+    urgent = db.scalar(select(func.count(Task.id)).where(Task.is_urgent.is_(True), Task.is_done.is_(False)))
+
+    return TaskStatsResponse(
+        total=total or 0,
+        done=done or 0,
+        undone=undone or 0,
+        urgent=urgent or 0,
+    )
 
 
 @router.get(

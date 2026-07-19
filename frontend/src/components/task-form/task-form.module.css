@@ -1,5 +1,5 @@
 .form {
-    padding: 1.5rem;
+    padding: 1rem;
     border: 1px solid #e2e8f0;
     border-radius: 1.25rem;
     background: #ffffff;
@@ -9,7 +9,7 @@
 }
 
 .header {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .checkboxField {
@@ -54,12 +54,12 @@
 
 .fields {
     display: grid;
-    gap: 1.25rem;
+    gap: 1rem;
 }
 
 .field {
     display: grid;
-    gap: 0.5rem;
+    gap: 0.25rem;
 }
 
 .labelRow {
@@ -104,13 +104,13 @@
 }
 
 .input {
-    min-height: 2.75rem;
-    padding: 0.7rem 0.85rem;
+    min-height: 2.2rem;
+    padding: 0.5rem 0.85rem;
 }
 
 .textarea {
-    min-height: 7rem;
-    padding: 0.8rem 0.85rem;
+    min-height: 4rem;
+    padding: 0.5rem 0.85rem;
     resize: vertical;
     line-height: 1.5;
 }
@@ -189,31 +189,28 @@
     line-height: 1.45;
 }
 
+.actionsGroup {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
 .submitButton {
-    width: 100%;
-    min-height: 2.85rem;
-    margin-top: 1.5rem;
+    flex: 1;
+    padding: 0.8rem;
     border: 0;
-    border-radius: 0.9rem;
+    border-radius: 0.5rem;
     background: #2563eb;
     color: #ffffff;
     font: inherit;
-    font-weight: 700;
+    font-size: 0.95rem;
+    font-weight: 600;
     cursor: pointer;
-    transition:
-        background-color 150ms ease,
-        box-shadow 150ms ease,
-        transform 150ms ease;
+    transition: background-color 150ms ease;
 }
 
 .submitButton:hover:not(:disabled) {
     background: #1d4ed8;
-    box-shadow: 0 8px 18px rgb(37 99 235 / 0.22);
-    transform: translateY(-1px);
-}
-
-.submitButton:active:not(:disabled) {
-    transform: translateY(0);
 }
 
 .submitButton:focus-visible {
@@ -225,6 +222,29 @@
     cursor: not-allowed;
     background: #93c5fd;
     box-shadow: none;
+}
+
+.cancelButton {
+    flex: 1;
+    padding: 0.8rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.5rem;
+    background: transparent;
+    color: #475569;
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+}
+
+.cancelButton:hover:not(:disabled) {
+    background: #f1f5f9;
+}
+
+.cancelButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
 @media (max-width: 640px) {

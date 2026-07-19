@@ -5,14 +5,17 @@ import {
   useState,
 } from "react";
 
-import type { TaskCreate } from "@/lib/types";
+import type { Task, TaskCreate } from "@/lib/types";
 
 import styles from "./task-form.module.css";
 
 type TaskFormProps = {
-  onCreate: (
+  initialData?: Task;
+  onSubmit: (
     taskData: TaskCreate,
   ) => Promise<void>;
+  onCancel?: () => void;
+  onPriorityChange?: (priority: number) => void;
 };
 
 function convertLocalDateToIso(
@@ -32,17 +35,25 @@ function convertLocalDateToIso(
 }
 
 export function TaskForm({
-  onCreate,
+  initialData,
+  onSubmit,
+  onCancel,
+  onPriorityChange,
 }: TaskFormProps) {
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState(initialData?.title ?? "");
   const [description, setDescription] =
-    useState("");
+    useState(initialData?.description ?? "");
   const [priority, setPriority] =
-    useState(5);
+    useState(initialData?.priority ?? 5);
   const [isUrgent, setIsUrgent] =
-    useState(false);
+    useState(initialData?.is_urgent ?? false);
+  
+  // Format the deadline to yyyy-MM-ddThh:mm if it exists
+  const initialDeadline = initialData?.deadline
+    ? new Date(initialData.deadline).toISOString().slice(0, 16)
+    : "";
   const [deadline, setDeadline] =
-    useState("");
+    useState(initialDeadline);
 
   const [isSubmitting, setIsSubmitting] =
     useState(false);
@@ -79,7 +90,7 @@ export function TaskForm({
     setIsSubmitting(true);
 
     try {
-      await onCreate({
+      await onSubmit({
         title: normalizedTitle,
         description:
           normalizedDescription || undefined,
@@ -88,11 +99,13 @@ export function TaskForm({
         deadline: deadlineIso,
       });
 
-      setTitle("");
-      setDescription("");
-      setPriority(5);
-      setIsUrgent(false);
-      setDeadline("");
+      if (!initialData) {
+        setTitle("");
+        setDescription("");
+        setPriority(5);
+        setIsUrgent(false);
+        setDeadline("");
+      }
     } catch (caughtError) {
       setError(
         caughtError instanceof Error
@@ -111,16 +124,17 @@ export function TaskForm({
     >
       <div className={styles.header}>
         <p className={styles.eyebrow}>
-          Create task
+          {initialData ? "Edit task" : "Create task"}
         </p>
 
         <h2 className={styles.title}>
-          Add a new task
+          {initialData ? "Update task" : "Add a new task"}
         </h2>
 
         <p className={styles.subtitle}>
-          Add details, priority and an optional
-          deadline.
+          {initialData 
+            ? "Update details, priority and deadline." 
+            : "Add details, priority and an optional deadline."}
         </p>
       </div>
 
@@ -178,7 +192,7 @@ export function TaskForm({
               setDescription(event.target.value)
             }
             maxLength={1000}
-            rows={4}
+            rows={2}
             disabled={isSubmitting}
             placeholder="Optional details"
             className={styles.textarea}
@@ -208,11 +222,11 @@ export function TaskForm({
             max={10}
             step={1}
             value={priority}
-            onChange={(event) =>
-              setPriority(
-                Number(event.target.value),
-              )
-            }
+            onChange={(event) => {
+              const newPriority = Number(event.target.value);
+              setPriority(newPriority);
+              onPriorityChange?.(newPriority);
+            }}
             disabled={isSubmitting}
             className={styles.range}
           />
@@ -269,17 +283,29 @@ export function TaskForm({
         </p>
       )}
 
-      <button
-        type="submit"
-        disabled={
-          isSubmitting || !title.trim()
-        }
-        className={styles.submitButton}
-      >
-        {isSubmitting
-          ? "Adding task..."
-          : "Add task"}
-      </button>
+      <div className={styles.actionsGroup}>
+        {onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={isSubmitting}
+            className={styles.cancelButton}
+          >
+            Cancel
+          </button>
+        )}
+        <button
+          type="submit"
+          disabled={
+            isSubmitting || !title.trim()
+          }
+          className={styles.submitButton}
+        >
+          {isSubmitting
+            ? "Saving..."
+            : (initialData ? "Save changes" : "Add task")}
+        </button>
+      </div>
     </form>
   );
 }

@@ -150,3 +150,10 @@ class TaskResponse(BaseModel):
     updated_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class TaskStatsResponse(BaseModel):
+    total: int
+    done: int
+    undone: int
+    urgent: int
