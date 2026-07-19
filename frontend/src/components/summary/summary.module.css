@@ -16,7 +16,7 @@
     gap: 2px;
     z-index: 1;
     --color1: var(--color-summary-all-1);
-    --color2: var(--color-primary-light);
+    --color2: var(--color-summary-all-2);
 }
 
 .summaryCardBg {
@@ -31,16 +31,19 @@
 .summaryCard:nth-child(2) {
     --color1: var(--color-summary-undone-1);
     --color2: var(--color-summary-undone-2);
+    --color-3: var(--color-summary-undone-background);
 }
 
 .summaryCard:nth-child(3) {
     --color1: var(--color-summary-urgent-1);
     --color2: var(--color-summary-urgent-2);
+    --color-3: var(--color-summary-urgent-background);
 }
 
 .summaryCard:nth-child(4) {
     --color1: var(--color-summary-done-1);
     --color2: var(--color-summary-done-2);
+    --color-3: var(--color-summary-done-background);
 }
 
 .summaryCardText {
@@ -53,7 +56,7 @@
     padding-top: 15px;
     z-index: 2;
     transform: rotate(-5deg);
-    color: var(--color-gray-900);
+    color: var(--color-summary-text);
 }
 
 .summaryValue {

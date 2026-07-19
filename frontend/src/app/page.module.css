@@ -2,9 +2,9 @@
     min-height: 100vh;
     padding: 24px 20px;
     background:
-        radial-gradient(circle at top left,
-            rgb(219 234 254 / 0.8),
-            transparent 480px),
+        radial-gradient(circle at top right,
+            rgb(63 111 159 / 35%),
+            transparent 520px),
         var(--color-gray-50);
 }
 
@@ -31,8 +31,15 @@
     text-transform: uppercase;
 }
 
-.title {
+.titleWrapper {
+    display: flex;
+    align-items: center;
+    gap: 16px;
     margin: 6px 0 0;
+}
+
+.title {
+    margin: 0;
     color: var(--color-gray-900);
     font-size: clamp(35px, 5vw, 64px);
     font-weight: 800;

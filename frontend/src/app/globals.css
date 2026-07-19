@@ -13,15 +13,82 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body {
+  background: var(--color-bg-subtle);
+  color: var(--color-text-primary);
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* React Datepicker Dark Mode Overrides */
+:root[data-theme="dark"] .react-datepicker {
+  background-color: var(--color-gray-100);
+  border-color: var(--color-gray-200);
+}
+
+:root[data-theme="dark"] .react-datepicker__header {
+  background-color: var(--color-primary);
+  border-bottom-color: var(--color-gray-200);
+}
+
+:root[data-theme="dark"] .react-datepicker__day {
+  color: var(--color-text-primary);
+}
+
+:root[data-theme="dark"] .react-datepicker__day:hover {
+  background-color: var(--color-gray-200);
+}
+
+:root[data-theme="dark"] .react-datepicker__day--keyboard-selected,
+:root[data-theme="dark"] .react-datepicker__day--selected {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+:root[data-theme="dark"] .react-datepicker__day--disabled {
+  color: var(--color-gray-400);
+}
+
+:root[data-theme="dark"] .react-datepicker__time-container {
+  border-left-color: var(--color-gray-200);
+}
+
+:root[data-theme="dark"] .react-datepicker__time-list-item {
+  color: var(--color-text-primary) !important;
+  background-color: var(--color-gray-100) !important;
+}
+
+:root[data-theme="dark"] .react-datepicker__time-list-item:hover {
+  background-color: var(--color-gray-200) !important;
+}
+
+:root[data-theme="dark"] .react-datepicker__time-list-item--selected {
+  background-color: var(--color-primary) !important;
+  color: #ffffff !important;
+}
+
+/* React Quill Dark Mode Overrides */
+:root[data-theme="dark"] .ql-toolbar {
+  border-color: var(--color-border-subtle) !important;
+  background-color: var(--color-bg-subtle);
+}
+
+:root[data-theme="dark"] .ql-container {
+  border-color: var(--color-border-subtle) !important;
+}
+
+:root[data-theme="dark"] .ql-editor {
+  color: var(--color-text-primary);
+}
+
+:root[data-theme="dark"] .ql-snow .ql-stroke {
+  stroke: var(--color-text-secondary);
+}
+
+:root[data-theme="dark"] .ql-snow .ql-fill {
+  fill: var(--color-text-secondary);
+}
+
+:root[data-theme="dark"] .ql-snow .ql-picker {
+  color: var(--color-text-secondary);
 }

@@ -11,6 +11,7 @@ import { Summary } from "@/components/summary/summary";
 import { TaskForm } from "@/components/task-form/task-form";
 import { TaskList } from "@/components/task-list/task-list";
 import { Modal } from "@/components/modal/modal";
+import { ThemeToggle } from "@/components/theme-toggle/theme-toggle";
 import toast from "react-hot-toast";
 import {
   createTask,
@@ -198,9 +199,12 @@ export default function HomePage() {
               Junior Full-Stack Assignment
             </p>
 
-            <h1 className={styles.title}>
-              Task Manager
-            </h1>
+            <div className={styles.titleWrapper}>
+              <h1 className={styles.title}>
+                Task Manager
+              </h1>
+              <ThemeToggle />
+            </div>
 
             <p className={styles.subtitle}>
               Create, search, filter and

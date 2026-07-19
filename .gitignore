@@ -48,3 +48,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+# AI Agents
+.agents/
+AGENTS.md
+docs/agents/

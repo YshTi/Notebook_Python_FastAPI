@@ -36,18 +36,53 @@
   --color-error: #ef4444;
   --color-error-dark: #dc2626;
 
-  /* Specifics for Summary cards */
+  /* Specifics for Summary cards (DO NOT OVERRIDE IN DARK MODE) */
   --color-summary-all-1: #d2dff3;
   --color-summary-all-2: #5d9cee;
   --color-summary-undone-1: #fcf6c8;
   --color-summary-undone-2: #cfc611;
+  --color-summary-undone-background: #e0dea2;
   --color-summary-urgent-1: #facbcb;
   --color-summary-urgent-2: #d94242;
+  --color-summary-urgent-background: #e8aaaa;
   --color-summary-done-1: #cff6cf;
   --color-summary-done-2: #2cb32c;
+  --color-summary-done-background: #a9d6a4;
+  --color-summary-text: #0f172a;
+  --color-text: var(--color-gray-900);
 
   /* Specifics for Task priority tags */
   --color-priority-low: #59b764;
   --color-priority-medium: #eab308;
   --color-priority-high: #ef4444;
+}
+
+:root[data-theme="dark"] {
+  /* Base */
+  --color-white: #21304a;
+  --color-black: #ffffff;
+
+  /* Invert Grays/Slates */
+  --color-gray-50: #0f172a;
+  --color-gray-100: #1e293b;
+  --color-gray-200: #334155;
+  --color-gray-300: #475569;
+  --color-gray-400: #64748b;
+  --color-gray-500: #94a3b8;
+  --color-gray-600: #cbd5e1;
+  --color-gray-700: #e2e8f0;
+  --color-gray-800: #f1f5f9;
+  --color-gray-900: #f8fafc;
+
+  /* Semantic Overrides */
+  --color-text-primary: var(--color-gray-900);
+  --color-text-secondary: var(--color-gray-600);
+  --color-border-subtle: var(--color-gray-200);
+  --color-bg-subtle: var(--color-gray-100);
+
+  /* Adjust Primary Blue for Dark Mode */
+  --color-primary-dark: #2563eb;
+  --color-primary: #3b82f6;
+  --color-primary-light: #60a5fa;
+  --color-primary-lighter: #3f6f9f;
 }

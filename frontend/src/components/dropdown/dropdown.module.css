@@ -51,6 +51,7 @@
     background-color: var(--color-primary-lightest);
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
+    color: var(--color-summary-text);
 }
 
 .trigger:disabled {
@@ -109,6 +110,7 @@
 .optionActive {
     outline: none;
     background-color: var(--color-primary-lightest);
+    color: var(--color-summary-text);
 }
 
 .triggerSuccess,
