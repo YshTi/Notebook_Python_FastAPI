@@ -12,7 +12,7 @@ type SummaryProps = {
 export function Summary({ stats }: SummaryProps) {
   const hoverProps = {
     whileHover: { scale: 1.05 },
-    transition: { type: "spring", stiffness: 400, damping: 10 }
+    transition: { type: "spring" as const, stiffness: 400, damping: 10 }
   };
 
   return (

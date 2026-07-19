@@ -15,11 +15,6 @@
     box-shadow: 0 0 0 4px rgb(37 99 235 / 0.1);
 }
 
-.statusDropdown {
-    flex: 0 0 96px;
-    width: 96px;
-}
-
 .dropdownWrapper {
     min-width: 96px;
 }

@@ -24,12 +24,17 @@ export function Modal({ title, onClose, priorityText, priorityLevel, children }:
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-    document.body.style.overflow = "hidden";
+    const timer = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    
     return () => {
       document.body.style.overflow = "";
     };
-  }, []);
+  }, [mounted]);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {

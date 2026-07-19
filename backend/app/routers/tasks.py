@@ -68,24 +68,30 @@ def list_tasks(
 
     sort_options = {
         "created_desc": (
+            asc(Task.is_done),
             desc(Task.created_at),
         ),
         "created_asc": (
+            asc(Task.is_done),
             asc(Task.created_at),
         ),
         "priority_asc": (
+            asc(Task.is_done),
             asc(Task.priority),
             desc(Task.created_at),
         ),
         "priority_desc": (
+            asc(Task.is_done),
             desc(Task.priority),
             desc(Task.created_at),
         ),
         "deadline_asc": (
+            asc(Task.is_done),
             Task.deadline.asc().nulls_last(),
             desc(Task.created_at),
         ),
         "deadline_desc": (
+            asc(Task.is_done),
             Task.deadline.desc().nulls_last(),
             desc(Task.created_at),
         ),
