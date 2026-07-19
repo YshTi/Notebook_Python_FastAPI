@@ -2,6 +2,7 @@
 
 import { TaskItem } from "@/components/task-item/task-item";
 import type { Task, TaskUpdate } from "@/lib/types";
+import { AnimatePresence } from "framer-motion";
 
 import styles from "./task-list.module.css";
 
@@ -53,18 +54,20 @@ export function TaskList({
 
   return (
     <div className={styles.taskList}>
-      {tasks.map((task) => (
-        <TaskItem
-          key={task.id}
-          task={task}
-          isUpdating={
-            updatingTaskId === task.id
-          }
-          onToggle={onToggle}
-          onDelete={onDelete}
-          onUpdate={onUpdate}
-        />
-      ))}
+      <AnimatePresence>
+        {tasks.map((task) => (
+          <TaskItem
+            key={task.id}
+            task={task}
+            isUpdating={
+              updatingTaskId === task.id
+            }
+            onToggle={onToggle}
+            onDelete={onDelete}
+            onUpdate={onUpdate}
+          />
+        ))}
+      </AnimatePresence>
     </div>
   );
 }

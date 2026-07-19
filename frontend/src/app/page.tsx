@@ -6,10 +6,12 @@ import {
   useState,
 } from "react";
 
-import { TaskFilter } from "@/components/task-filters/task-filters";
+import { TaskSearch, TaskSelects } from "@/components/task-filters/task-filters";
+import { Summary } from "@/components/summary/summary";
 import { TaskForm } from "@/components/task-form/task-form";
 import { TaskList } from "@/components/task-list/task-list";
 import { Modal } from "@/components/modal/modal";
+import toast from "react-hot-toast";
 import {
   createTask,
   deleteTask,
@@ -93,9 +95,16 @@ export default function HomePage() {
   async function handleCreate(
     taskData: TaskCreate,
   ) {
-    await createTask(taskData);
-    setIsCreateModalOpen(false);
-    await loadTasks();
+    try {
+      await createTask(taskData);
+      setIsCreateModalOpen(false);
+      await loadTasks();
+      toast.success("Task created successfully!");
+    } catch (caughtError) {
+      const msg = caughtError instanceof Error ? caughtError.message : "Could not add task.";
+      setError(msg);
+      toast.error(msg);
+    }
   }
 
   async function handleToggle(
@@ -120,12 +129,11 @@ export default function HomePage() {
       );
 
       await loadTasks();
+      toast.success(task.is_done ? "Task marked as Todo" : "Task marked as Done");
     } catch (caughtError) {
-      setError(
-        caughtError instanceof Error
-          ? caughtError.message
-          : "Could not update the task.",
-      );
+      const msg = caughtError instanceof Error ? caughtError.message : "Could not update the task.";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setUpdatingTaskId(null);
     }
@@ -140,12 +148,11 @@ export default function HomePage() {
     try {
       await deleteTask(taskId);
       await loadTasks();
+      toast.success("Task deleted successfully!");
     } catch (caughtError) {
-      setError(
-        caughtError instanceof Error
-          ? caughtError.message
-          : "Could not delete the task.",
-      );
+      const msg = caughtError instanceof Error ? caughtError.message : "Could not delete the task.";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setUpdatingTaskId(null);
     }
@@ -172,12 +179,11 @@ export default function HomePage() {
       );
 
       await loadTasks();
+      toast.success("Task updated successfully!");
     } catch (caughtError) {
-      setError(
-        caughtError instanceof Error
-          ? caughtError.message
-          : "Could not update the task.",
-      );
+      const msg = caughtError instanceof Error ? caughtError.message : "Could not update the task.";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setUpdatingTaskId(null);
     }
@@ -202,95 +208,32 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className={styles.summary}>
-            <div
-              className={styles.summaryCard}
-            >
-              <svg className={styles.summaryCardBg}><use href="/sprite.svg#icon-notes-blank"></use></svg>
-              <div className={styles.summaryCardText}>
-                <span
-                  className={styles.summaryValue}
-                >
-                  {stats?.total ?? 0}
-                </span>
-
-                <span className={styles.summaryLabel} >
-                  Total
-                </span>
-              </div>
-            </div>
-
-            <div
-              className={styles.summaryCard}
-            >
-              <svg className={styles.summaryCardBg}><use href="/sprite.svg#icon-notes-blank"></use></svg>
-              <div className={styles.summaryCardText}>
-                <span
-                  className={styles.summaryValue}
-                >
-                  {stats?.undone ?? 0}
-                </span>
-
-                <span className={styles.summaryLabel} >
-                  Undone
-                </span>
-              </div>
-            </div>
-
-            <div className={styles.summaryCard} >
-              <svg className={styles.summaryCardBg}><use href="/sprite.svg#icon-notes-blank"></use></svg>
-              <div className={styles.summaryCardText}>
-                <span
-                  className={styles.summaryValue}
-                >
-                  {stats?.urgent ?? 0}
-                </span>
-
-                <span className={styles.summaryLabel} >
-                  Urgent
-                </span>
-              </div>
-            </div>
-
-            <div
-              className={styles.summaryCard}
-            >
-              <svg className={styles.summaryCardBg}><use href="/sprite.svg#icon-notes-blank"></use></svg>
-              <div className={styles.summaryCardText}>
-                <span
-                  className={styles.summaryValue}
-                >
-                  {stats?.done ?? 0}
-                </span>
-
-                <span className={styles.summaryLabel} >
-                  Done
-                </span>
-              </div>
-            </div>
-          </div>
+          <Summary stats={stats} />
         </header>
 
         <div className={styles.layout}>
 
           <section className={styles.content}>
             <div className={styles.controlsHeader}>
-              <TaskFilter
-                search={search}
-                status={status}
-                sort={sort}
-                onSearchChange={setSearch}
-                onStatusChange={setStatus}
-                onSortChange={setSort}
-              />
-              <button
-                className={styles.addTaskButton}
-                onClick={() => setIsCreateModalOpen(true)}
-                aria-label="Add Task"
-                title="Add Task"
-              >
-                +
-              </button>
+              <div className={styles.searchPart}>
+                <TaskSearch search={search} onSearchChange={setSearch} />
+              </div>
+              <div className={styles.filtersPart}>
+                <TaskSelects
+                  status={status}
+                  sort={sort}
+                  onStatusChange={setStatus}
+                  onSortChange={setSort}
+                />
+                <button
+                  className={styles.addTaskButton}
+                  onClick={() => setIsCreateModalOpen(true)}
+                  aria-label="Add Task"
+                  title="Add Task"
+                >
+                  +
+                </button>
+              </div>
             </div>
 
             {error && (

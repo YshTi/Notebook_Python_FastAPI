@@ -1,9 +1,9 @@
 .taskItem {
     display: flex;
     flex-direction: column;
-    background-color: #ffffff; /* White background as requested */
-    border: 1px solid #e2e8f0; /* Soft border edge */
-    border-radius: 0.15rem;
+    background-color: var(--color-white); /* White background as requested */
+    border: 1px solid var(--color-gray-200); /* Soft border edge */
+    border-radius: 2px;
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
     position: relative;
     min-height: 220px;
@@ -20,8 +20,8 @@
 }
 
 .completed {
-    background-color: #f8fafc; /* Muted gray for completed sticky note */
-    border-color: #e2e8f0;
+    background-color: var(--color-gray-50); /* Muted gray for completed sticky note */
+    border-color: var(--color-gray-200);
     opacity: 0.85;
 }
 
@@ -29,34 +29,37 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.6rem 0.8rem;
-    background: linear-gradient(135deg, #89bbf2 0%, #5d9cee 100%);
-    color: #ffffff;
+    padding: 10px 13px;
+    background: linear-gradient(135deg, var(--color-primary-lighter) 0%, var(--color-primary-light) 100%);
+    color: var(--color-white);
     border-bottom: 1px solid rgb(0 0 0 / 0.05);
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .completed .topBar {
-    background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+    background: linear-gradient(135deg, var(--color-gray-400) 0%, var(--color-gray-500) 100%);
 }
 
 .topBarLeft,
 .topBarRight {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 8px;
 }
 
 .statusButton {
     display: flex;
-    width: 1.35rem;
-    height: 1.35rem;
+    width: 22px;
+    height: 22px;
     align-items: center;
     justify-content: center;
     border: 2px solid rgb(255 255 255 / 0.7);
     border-radius: 999px;
     background: transparent;
-    color: #ffffff;
-    font-size: 0.8rem;
+    color: var(--color-white);
+    font-size: 13px;
     font-weight: 700;
     cursor: pointer;
     transition:
@@ -65,18 +68,18 @@
 }
 
 .statusButton:hover:not(:disabled) {
-    border-color: #ffffff;
+    border-color: var(--color-white);
     background: rgb(255 255 255 / 0.15);
 }
 
 .statusButton[aria-pressed="true"] {
-    border-color: #ffffff;
-    background: #ffffff;
-    color: #2563eb;
+    border-color: var(--color-white);
+    background: var(--color-white);
+    color: var(--color-primary);
 }
 
 .completed .statusButton[aria-pressed="true"] {
-    color: #64748b;
+    color: var(--color-gray-500);
 }
 
 .statusButton:disabled {
@@ -85,7 +88,7 @@
 }
 
 .statusBadge {
-    font-size: 0.68rem;
+    font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -100,70 +103,70 @@
 }
 
 .urgentBadge {
-    background: #ef4444;
-    color: #ffffff;
-    padding: 0.2rem 0.45rem;
-    border-radius: 0.25rem;
-    font-size: 0.65rem;
+    background: var(--color-error);
+    color: var(--color-white);
+    padding: 3px 7px;
+    border-radius: 4px;
+    font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
 }
 
 .priorityBadge {
-    padding: 0.2rem 0.45rem;
-    border-radius: 0.25rem;
-    font-size: 0.65rem;
+    padding: 3px 7px;
+    border-radius: 4px;
+    font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
 }
 
 .lowPriority {
-    background: rgb(255 255 255 / 0.15);
-    color: #ffffff;
+    background: #059669;
+    color: var(--color-white);
 }
 
 .mediumPriority {
     background: #f59e0b;
-    color: #ffffff;
+    color: var(--color-white);
 }
 
 .highPriority {
-    background: #ef4444;
-    color: #ffffff;
+    background: var(--color-error);
+    color: var(--color-white);
 }
 
 .content {
-    padding: 1rem;
+    padding: 16px;
     display: flex;
     flex-direction: column;
     flex: 1;
 }
 
 .title {
-    margin: 0 0 0.5rem 0;
-    color: #0f172a;
-    font-size: 1.05rem;
+    margin: 0 0 8px 0;
+    color: var(--color-gray-900);
+    font-size: 17px;
     font-weight: 700;
     line-height: 1.35;
     overflow-wrap: anywhere;
 }
 
 .completed .title {
-    color: #94a3b8;
+    color: var(--color-gray-400);
     text-decoration: line-through;
 }
 
 .description {
-    margin: 0 0 1rem 0;
-    color: #475569;
-    font-size: 0.88rem;
+    margin: 0 0 16px 0;
+    color: var(--color-gray-600);
+    font-size: 14px;
     line-height: 1.5;
     overflow-wrap: anywhere;
     flex-grow: 1;
 }
 
 .completed .description {
-    color: #cbd5e1;
+    color: var(--color-gray-300);
     text-decoration: line-through;
 }
 
@@ -171,39 +174,39 @@
     margin-top: auto;
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
-    font-size: 0.72rem;
-    color: #64748b;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--color-gray-500);
     border-top: 1px dashed rgb(0 0 0 / 0.06);
-    padding-top: 0.6rem;
+    padding-top: 10px;
 }
 
 .metaRow {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 6px;
 }
 
 .metaLabel {
     font-weight: 600;
-    color: #94a3b8;
+    color: var(--color-gray-400);
 }
 
 .actions {
     display: flex;
     justify-content: flex-end;
-    margin-top: 0.75rem;
-    gap: 0.5rem;
+    margin-top: 12px;
+    gap: 8px;
 }
 
 .editButton,
 .deleteButton {
-    padding: 0.35rem 0.7rem;
+    padding: 6px 11px;
     border: 0;
-    border-radius: 0.3rem;
+    border-radius: 5px;
     background: transparent;
     font: inherit;
-    font-size: 0.8rem;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     transition:
@@ -212,7 +215,7 @@
 }
 
 .editButton {
-    color: #2563eb;
+    color: var(--color-primary);
 }
 
 .editButton:hover:not(:disabled) {
@@ -220,11 +223,11 @@
 }
 
 .deleteButton {
-    color: #dc2626;
+    color: var(--color-error-dark);
 }
 
 .deleteButton:hover:not(:disabled) {
-    background-color: #fee2e2;
+    background-color: var(--color-error-100);
 }
 
 .editButton:disabled,
@@ -233,10 +236,9 @@
     opacity: 0.5;
 }
 
-@media (max-width: 640px) {
+@media (min-width: 768px) {
     .topBar {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 0.5rem;
+        flex-wrap: nowrap;
+        gap: 0;
     }
 }

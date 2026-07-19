@@ -12,7 +12,7 @@ type ModalProps = {
   children: React.ReactNode;
 };
 
-function getPriorityClass(styles: any, level?: number) {
+function getPriorityClass(styles: Record<string, string>, level?: number) {
   if (level === undefined) return "";
   if (level >= 8) return styles.highPriority;
   if (level >= 5) return styles.mediumPriority;
@@ -25,6 +25,13 @@ export function Modal({ title, onClose, priorityText, priorityLevel, children }:
 
   useEffect(() => {
     setMounted(true);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
+  useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         onClose();

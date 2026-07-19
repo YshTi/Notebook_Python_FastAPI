@@ -123,19 +123,11 @@ export function TaskForm({
       onSubmit={handleSubmit}
     >
       <div className={styles.header}>
-        <p className={styles.eyebrow}>
-          {initialData ? "Edit task" : "Create task"}
-        </p>
-
         <h2 className={styles.title}>
-          {initialData ? "Update task" : "Add a new task"}
-        </h2>
-
-        <p className={styles.subtitle}>
           {initialData 
             ? "Update details, priority and deadline." 
             : "Add details, priority and an optional deadline."}
-        </p>
+        </h2>
       </div>
 
       <div className={styles.fields}>

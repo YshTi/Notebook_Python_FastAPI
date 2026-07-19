@@ -1,0 +1,93 @@
+.summary {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+}
+
+.summaryCard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    min-width: 0;
+    padding: 12px 8px;
+    gap: 2px;
+    z-index: 1;
+    --color1: var(--color-summary-all-1);
+    --color2: var(--color-primary-light);
+}
+
+.summaryCardBg {
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    width: calc(100% + 6px);
+    height: calc(100% + 6px);
+    z-index: -1;
+}
+
+.summaryCard:nth-child(2) {
+    --color1: var(--color-summary-undone-1);
+    --color2: var(--color-summary-undone-2);
+}
+
+.summaryCard:nth-child(3) {
+    --color1: var(--color-summary-urgent-1);
+    --color2: var(--color-summary-urgent-2);
+}
+
+.summaryCard:nth-child(4) {
+    --color1: var(--color-summary-done-1);
+    --color2: var(--color-summary-done-2);
+}
+
+.summaryCardText {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding-left: 15px;
+    padding-top: 15px;
+    z-index: 2;
+    transform: rotate(-5deg);
+    color: var(--color-gray-900);
+}
+
+.summaryValue {
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.summaryLabel {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+@media screen and (max-width: 374px) {
+    .summaryValue {
+        font-size: 20px;
+        line-height: 1;
+    }
+
+    .summaryLabel {
+        font-size: 10px;
+    }
+}
+
+@media (min-width: 768px) {
+    .summary {
+        width: auto;
+        gap: 12px;
+    }
+
+    .summaryCard {
+        flex: none;
+        width: 104px;
+        height: 104px;
+        padding: 0;
+    }
+}

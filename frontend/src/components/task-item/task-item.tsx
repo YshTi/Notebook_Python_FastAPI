@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 import type { Task, TaskCreate, TaskUpdate } from "@/lib/types";
 import { TaskForm } from "@/components/task-form/task-form";
 import { Modal } from "@/components/modal/modal";
+import { ConfirmModal } from "@/components/confirm-modal/confirm-modal";
 
 import styles from "./task-item.module.css";
 
@@ -52,17 +54,15 @@ export function TaskItem({
 }: TaskItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editPriority, setEditPriority] = useState(task.priority);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  async function handleDelete() {
-    const confirmed = window.confirm(
-      `Delete "${task.title}"?`,
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
+  async function handleDeleteConfirm() {
+    setShowDeleteConfirm(false);
     await onDelete(task.id);
+  }
+
+  function handleDeleteClick() {
+    setShowDeleteConfirm(true);
   }
 
   async function handleEditSubmit(taskData: TaskCreate) {
@@ -74,7 +74,11 @@ export function TaskItem({
 
 
   return (
-    <article
+    <motion.article
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, x: -20 }}
       className={`${styles.taskItem} ${
         task.is_done
           ? styles.completed
@@ -176,9 +180,7 @@ export function TaskItem({
           </button>
           <button
             type="button"
-            onClick={() =>
-              void handleDelete()
-            }
+            onClick={handleDeleteClick}
             disabled={isUpdating}
             className={styles.deleteButton}
           >
@@ -202,6 +204,14 @@ export function TaskItem({
           />
         </Modal>
       )}
-    </article>
+
+      <ConfirmModal
+        isOpen={showDeleteConfirm}
+        title="Delete Task"
+        message={`Are you sure you want to delete "${task.title}"? This action cannot be undone.`}
+        onCancel={() => setShowDeleteConfirm(false)}
+        onConfirm={() => void handleDeleteConfirm()}
+      />
+    </motion.article>
   );
 }

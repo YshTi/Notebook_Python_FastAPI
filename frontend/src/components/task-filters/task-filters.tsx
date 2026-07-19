@@ -4,95 +4,77 @@ import type {
   TaskSort,
   TaskStatus,
 } from "@/lib/types";
+import { Dropdown } from "@/components/dropdown/dropdown";
 
 import styles from "./task-filters.module.css";
 
-type TaskFilterProps = {
+type TaskSearchProps = {
   search: string;
-  status: TaskStatus;
-  sort: TaskSort;
-  onSearchChange: (
-    value: string,
-  ) => void;
-  onStatusChange: (
-    value: TaskStatus,
-  ) => void;
-  onSortChange: (
-    value: TaskSort,
-  ) => void;
+  onSearchChange: (value: string) => void;
 };
 
-export function TaskFilter({
+export function TaskSearch({
   search,
+  onSearchChange,
+}: TaskSearchProps) {
+  return (
+    <input
+      type="search"
+      value={search}
+      onChange={(event) => onSearchChange(event.target.value)}
+      placeholder="Search tasks..."
+      aria-label="Search tasks"
+      className={styles.searchInput}
+    />
+  );
+}
+
+type TaskSelectsProps = {
+  status: TaskStatus;
+  sort: TaskSort;
+  onStatusChange: (value: TaskStatus) => void;
+  onSortChange: (value: TaskSort) => void;
+};
+
+export function TaskSelects({
   status,
   sort,
-  onSearchChange,
   onStatusChange,
   onSortChange,
-}: TaskFilterProps) {
+}: TaskSelectsProps) {
+  const statusOptions = [
+    { value: "all", label: "All" },
+    { value: "undone", label: "Undone" },
+    { value: "urgent", label: "Urgent" },
+    { value: "done", label: "Done" },
+  ];
+
+  const sortOptions = [
+    { value: "created_desc", label: "Newest first" },
+    { value: "created_asc", label: "Oldest first" },
+    { value: "priority_desc", label: "Priority: high to low" },
+    { value: "priority_asc", label: "Priority: low to high" },
+    { value: "deadline_asc", label: "Deadline: soonest first" },
+    { value: "deadline_desc", label: "Deadline: latest first" },
+  ];
+
   return (
-    <div className={styles.filters}>
-      <input
-        type="search"
-        value={search}
-        onChange={(event) =>
-          onSearchChange(event.target.value)
-        }
-        placeholder="Search tasks..."
-        aria-label="Search tasks"
-        className={styles.searchInput}
+    <>
+      <Dropdown
+        value={status}
+        onChange={(val) => onStatusChange(val as TaskStatus)}
+        options={statusOptions}
+        ariaLabel="Filter tasks by status"
+        className={styles.dropdownWrapper}
       />
 
-      <select
-        value={status}
-        onChange={(event) =>
-          onStatusChange(
-            event.target.value as TaskStatus,
-          )
-        }
-        aria-label="Filter tasks by status"
-        className={styles.select}
-      >
-        <option value="all">All</option>
-        <option value="undone">Undone</option>
-        <option value="urgent">Urgent</option>
-        <option value="done">Done</option>
-      </select>
-
-      <select
+      <Dropdown
         value={sort}
-        onChange={(event) =>
-          onSortChange(
-            event.target.value as TaskSort,
-          )
-        }
-        aria-label="Sort tasks"
-        className={styles.select}
-      >
-        <option value="created_desc">
-          Newest first
-        </option>
-
-        <option value="created_asc">
-          Oldest first
-        </option>
-
-        <option value="priority_desc">
-          Priority: high to low
-        </option>
-
-        <option value="priority_asc">
-          Priority: low to high
-        </option>
-
-        <option value="deadline_asc">
-          Deadline: soonest first
-        </option>
-
-        <option value="deadline_desc">
-          Deadline: latest first
-        </option>
-      </select>
-    </div>
+        onChange={(val) => onSortChange(val as TaskSort)}
+        options={sortOptions}
+        ariaLabel="Sort tasks"
+        className={styles.dropdownWrapper}
+      />
+    </>
   );
 }
