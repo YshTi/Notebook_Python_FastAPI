@@ -45,6 +45,11 @@ This project is built using professional, scalable backend and frontend software
 - **Alembic Migration Tracking:** Database schemas are structured and modified using version-controlled **Alembic** migration history, rather than development-only auto-creation.
 - **Nullable Foreign Key Mapping:** Public tasks are separated from private tasks using a nullable `user_id` foreign key. This allows guest visitors to play with the interface safely, while keeping registered user workspaces fully isolated and secure.
 
+### 5. Automated Regression & Integration Tests
+
+- **SQLite Test Isolation:** Implemented an automated test suite utilizing an in-memory SQLite database, guaranteeing that test runs are extremely fast, fully isolated, and side-effect free.
+- **Full API Lifecycle Verification:** Covers 29 distinct scenarios including token-based authentication guards (via HttpOnly cookies), guest workspace scoping, input validation (e.g. priority range 1-10, timezone-aware future deadlines), and state tracking.
+
 ---
 
 ## 🛠️ Tech Stack
@@ -164,3 +169,17 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
    npm run dev
    ```
 4. Open [http://localhost:3000](http://localhost:3000) in your browser!
+
+#### Step 3: Run the Backend Test Suite
+
+To verify the API integrity, authentication guards, and database constraints, run the automated test suite:
+
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+2. Activate your virtual environment and run the test suite:
+   ```bash
+   source .venv/bin/activate
+   pytest -v
+   ```
